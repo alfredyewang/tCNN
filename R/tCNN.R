@@ -1,66 +1,66 @@
-
 library(keras)
+library(cluster)
 
 # Data Preparation ---------------------------------------------------
-tCNN <- function() {
-batch_size <- 128
-num_classes <- 10
-epochs <- 1
+tCNN <- function(x_train,y_train,x_test,y_test,C,nCluster,num_classes,batch_size,epochs,num_filters,window_size,strides_size,dropout_rate,fc1_units,fc1_activate_function,fc2_units,fc2_activate_function,fc3_units,fc3_activate_function) {
+  obj = pam(C,nCluster)
+  clustering=obj$clustering
+  idx = order(clustering)
+  x_train = x_train[,c(idx)]
+  x_test = x_test[,c(idx)]
 
-# The data, shuffled and split between train and test sets
-c(c(x_train, y_train), c(x_test, y_test)) %<-% dataset_mnist()
+  x_train <- array_reshape(x_train, c(nrow(x_train), dim(x_train)[2],1))
+  x_test <- array_reshape(x_test, c(nrow(x_test), dim(x_test)[2],1))
+  input_shape <- c(dim(x_test)[2],1)
 
-x_train <- array_reshape(x_train, c(nrow(x_train), 784))
-x_test <- array_reshape(x_test, c(nrow(x_test), 784))
+  cat(nrow(x_train), 'train samples\n')
+  cat(nrow(x_test), 'test samples\n')
 
-# Transform RGB values into [0,1] range
-x_train <- x_train / 255
-x_test <- x_test / 255
+  y_train <- to_categorical(y, num_classes)
+  y_test <- to_categorical(y, num_classes)
 
-cat(nrow(x_train), 'train samples\n')
-cat(nrow(x_test), 'test samples\n')
+  # Define Model --------------------------------------------------------------
+  model <- keras_model_sequential()
+  model %>%
+  layer_conv_1d(filters = num_filters, kernel_size = window_size, activation = 'relu',strides = strides_size,
+                  input_shape = input_shape) %>%
+  layer_dropout(rate = dropout_rate) %>%
+  layer_flatten() %>%
+  layer_dense(units = fc1_units, activation = fc1_activate_function,) %>%
+  layer_dropout(rate = dropout_rate) %>%
+  layer_dense(units = fc1_units, activation = fc1_activate_function,) %>%
+  layer_dropout(rate = dropout_rate) %>%
+  layer_dense(units = fc1_units, activation = fc1_activate_function,) %>%
+  layer_dropout(rate = dropout_rate) %>%
+  layer_dense(units = num_classes, activation = 'softmax')
 
-# Convert class vectors to binary class matrices
-y_train <- to_categorical(y_train, num_classes)
-y_test <- to_categorical(y_test, num_classes)
+  summary(model)
 
-# Define Model --------------------------------------------------------------
+  model %>% compile(
+    loss = 'categorical_crossentropy',
+    optimizer = optimizer_rmsprop(),
+    metrics = c('accuracy')
+  )
 
-model <- keras_model_sequential()
-model %>%
-  layer_dense(units = 256, activation = 'relu', input_shape = c(784)) %>%
-  layer_dropout(rate = 0.4) %>%
-  layer_dense(units = 128, activation = 'relu') %>%
-  layer_dropout(rate = 0.3) %>%
-  layer_dense(units = 10, activation = 'softmax')
+  # Training & Evaluation ----------------------------------------------------
 
-summary(model)
+  # Fit model to data
+  history <- model %>% fit(
+    x_train, y_train,
+    batch_size = batch_size,
+    epochs = epochs,
+    verbose = 1,
+    validation_split = 0.2
+  )
 
-model %>% compile(
-  loss = 'categorical_crossentropy',
-  optimizer = optimizer_rmsprop(),
-  metrics = c('accuracy')
-)
+  plot(history)
 
-# Training & Evaluation ----------------------------------------------------
+  score <- model %>% evaluate(
+    x_test, y_test,
+    verbose = 0
+  )
 
-# Fit model to data
-history <- model %>% fit(
-  x_train, y_train,
-  batch_size = batch_size,
-  epochs = epochs,
-  verbose = 1,
-  validation_split = 0.2
-)
-
-plot(history)
-
-score <- model %>% evaluate(
-  x_test, y_test,
-  verbose = 0
-)
-
-# Output metrics
-cat('Test loss:', score[[1]], '\n')
-cat('Test accuracy:', score[[2]], '\n')
+  # Output metrics
+  cat('Test loss:', score[[1]], '\n')
+  cat('Test accuracy:', score[[2]], '\n')
 }
