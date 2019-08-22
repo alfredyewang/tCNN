@@ -28,19 +28,21 @@ library("tCNN")
 ## Usage
 
 ```
-tCNN(#(x_train,y_train,x_test,y_test,
+tCNN(x_train,y_train,x_test,y_test,
   C,nCluster,num_classes,
   batch_size,epochs,num_filters,window_size,strides_size,
   dropout_rate,fc1_units,fc1_activate_function,
   fc2_units,fc2_activate_function,
-  fc3_units,fc3_activate_function)
-)
+  fc3_units,fc3_activate_function
+  )
 
 ```
 ## Arguments
+| Arguments     | Character |\
+| x_train |The training dataset|\
+| y_train |The label of training dataset|
 
-- x_train     The training dataset
-- y_train     The label of training dataset
+
 - x_test      The testing dataset
 - y_test      The label of testing dataset     
 - num_classes     The number of classes
@@ -77,54 +79,4 @@ pam(daisy(x, metric = "manhattan"), 2, diss = TRUE)
 data(ruspini)
 ## Plot similar to Figure 4 in Stryuf et al (1996)
 ## Not run: plot(pam(ruspini, 4), ask = TRUE)
-```
-
-### USA Human Gut Microbiome data (Continous-Outcome)
-#### Train the model
-
-The USA Human Gut Microbiome data contains 308 samples with 1087 OTUs. For details of description, please check our paper.
-```
-python3 src/pCNN.py --train --data_dir data/USA --model_dir model --outcome_type continous --batch_size 16 --max_epoch 2000 --learning_rate 5e-3 --dropout_rate 0.5 --window_size 8 8 8 --kernel_size 64 64 32 --strides 4 4 4
-```
-After training, the well-trained model will be saved to model directory.
-#### Evaluate the well-trained model
-
-```
-python3 src/pCNN.py --evaluation --data_dir data/USA --result_dir result/USA --model_dir model --outcome_type continous --batch_size 16 --max_epoch 2000 --learning_rate 5e-3 --dropout_rate 0.5 --window_size 8 8 8 --kernel_size 64 64 32 --strides 4 4 4
-```
-The program will evaluate the well-trained model, draw a R-squared figure, and save it to result directory.
-
-<center>
-<div align=center><img width="400" height="300" src="https://github.com/alfredyewang/pCNN/blob/master/result/USA/result.jpg"/></div>
-</center>  
-
-
-#### Test the model with unlabelled data
-
-```
-python3 src/pCNN.py --test --test_file data/USA/X_test.npy  --correlation_file data/USA/c.npy --result_dir result/USA --model_dir model --outcome_type continous --batch_size 16 --max_epoch 2000 --learning_rate 5e-3 --dropout_rate 0.5 --window_size 8 8 8 --kernel_size 64 64 32 --strides 4 4 4
-```
-The program will take the unlabelled test file and save the prediction result to result directory.
-
-
-### Malawian Twin pairs Human Gut Microbiome data (Binary-Outcome)
-#### Train the model
-The USA Human Gut Microbiome data contains 995 samples with 2291 OTUs.
-```
-python3 src/pCNN.py --train --data_dir data/Malawiantwin_pairs --model_dir model --outcome_type binary --batch_size 32 --max_epoch 500 --learning_rate 1e-4 --dropout_rate 0.5 --window_size 128 4 --kernel_size 32 32 --strides 64 2
-```
-#### Evaluate the well-trained model
-
-```
-python3 src/pCNN.py --evaluation --data_dir data/Malawiantwin_pairs --result_dir result/Malawiantwin_pairs --model_dir model --outcome_type binary --batch_size 32 --max_epoch 500 --learning_rate 1e-4 --dropout_rate 0.5 --window_size 128 4 --kernel_size 32 32 --strides 64 2
-```
-The program will draw a ROC figure and save it to result directory.
-
-<center>
-<div align=center><img width="400" height="300" src="https://github.com/alfredyewang/pCNN/blob/master/result/Malawiantwin_pairs/result.jpg"/></div>
-</center>  
-
-#### Test the model with unlabelled data
-```
-python3 src/pCNN.py --test --test_file data/Malawiantwin_pairs/X_test.npy --correlation_file data/Malawiantwin_pairs/c.npy --result_dir result/Malawiantwin_pairs --model_dir model --outcome_type binary --batch_size 32 --max_epoch 500 --learning_rate 1e-4 --dropout_rate 0.5 --window_size 128 4 --kernel_size 32 32 --strides 64 2
 ```
