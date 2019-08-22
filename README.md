@@ -1,89 +1,83 @@
-## Phylogeny-regularized Convolutional NeuralNetwork
-We develop a deep learning prediction method "Phylogeny-regularized convolutional Neural Network,"(pCNN) for microbiome-based prediction. The advantage of pCNN is that it uses the convolutional kernel to capture the signals of microbiome species with close evolutionary relationship in a local receptive field. Moreover, pCNN uses different convolutional layer to capture different taxonomic rank (e.g. species, genus, family, etc). Together, the convolutional layers with its built-in convolutional kernels capture microbiome signals at different taxonomic levels while encouraging local smoothing induced by the phylogenetic tree.
+## Tree-regularized Convolutional NeuralNetwork
+We develop a deep learning prediction method "Tree-regularized convolutional Neural Network,"(tCNN) for microbiome-based prediction. The advantage of tCNN is that it uses the convolutional kernel to capture the signals of microbiome species with close evolutionary relationship in a local receptive field. Moreover, cCNN uses different convolutional layer to capture different taxonomic rank (e.g. species, genus, family, etc). Together, the convolutional layers with its built-in convolutional kernels capture microbiome signals at different taxonomic levels while encouraging local smoothing induced by the phylogenetic tree.
+
 
 <center>
 
-<div align=center><img width="600" height="400" src="https://raw.githubusercontent.com/alfredyewang/pCNN/master/docs/Architecture.jpg"/></div>
+<div align=center><img width="600" height="400" src="https://raw.githubusercontent.com/alfredyewang/tCNN/master/docs/Architecture.jpg"/></div>
 </center>  
 
-For details of pCNN, users can refer to our paper "**A Phylogeny-regularized Convolutional NeuralNetwork for Microbiome-based Predictionsn**".
+## Requirements and
 
+tCNN is implemented by Keras for R. Please check the guide on official website for detail instruction of installing Keras for R. To use tCNN, R version >= 3.0 is required. Versions for other packages are suggested.
 
-## Requirements and Installation
+-R >= 3.0 (64-bit)
 
-pCNN is implemented by TensorFlow. Both CPU and GPU mode are supported. Please check the guide on official website for detail instruction of installing TensorFlow-GPU.
+-Python 2.7 (64-bit)
 
-- Python 3.6
-- TensorFlow == 1.12.0
-- numpy >= 1.15.4
-- scipy >= 1.2.1
-- scikit-learn >= 0.20.3
-- seaborn >=0.9.0
-- matplotlib >=3.1.0
+-Keras 2.2.4 in R and Python
 
-Download pCNN:
+-cluster 2.1.0
+
+## Installation
+Install and load tCNN:
 ```
-git clone https://github.com/alfredyewang/pCNN
-```
-Install requirements
-```
-pip3 install -r requirements.txt
+devtools::install_github("alfredyewang/tCNN")
+library("tCNN")
 ```
 ## Usage
-You can see the hyper paramenters for pCNN by help option:
 
 ```
-usage: pCNN.py [-h] [--train] [--evaluation] [--test]
-               [--data_dir <data_directory>] [--test_file TEST_FILE]
-               [--correlation_file CORRELATION_FILE] [--model_dir MODEL_DIR]
-               [--result_dir <data_directory>] [--outcome_type OUTCOME_TYPE]
-               [--batch_size BATCH_SIZE] [--max_epoch MAX_EPOCH]
-               [--learning_rate LEARNING_RATE] [--dropout_rate DROPOUT_RATE]
-               [--L2_regularizer L2_REGULARIZER]
-               [--window_size WINDOW_SIZE [WINDOW_SIZE ...]]
-               [--kernel_size KERNEL_SIZE [KERNEL_SIZE ...]]
-               [--strides STRIDES [STRIDES ...]]
-
-A Phylogeny-regularized Convolutional NeuralNetwork for Microbiome-based
-Predictions
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --train               Use this option for train model
-  --evaluation          Use this option for evaluate model
-  --test                Use this option for test model
-  --data_dir <data_directory>
-                        The data directory for training and evaluation
-  --test_file TEST_FILE
-                        The unlabelled test file
-  --correlation_file CORRELATION_FILE
-                        The correlation matrix for unlabelled test file
-  --model_dir MODEL_DIR
-                        The directory to save or restore the trained models.
-  --result_dir <data_directory>
-                        The directory to save test / evaluation result
-  --outcome_type OUTCOME_TYPE
-                        The outcome type
-  --batch_size BATCH_SIZE
-                        The batch size for training
-  --max_epoch MAX_EPOCH
-                        The max epoch for training
-  --learning_rate LEARNING_RATE
-                        The learning rate for training
-  --dropout_rate DROPOUT_RATE
-                        The dropout rate for training
-  --L2_regularizer L2_REGULARIZER
-                        The L2 lambda
-  --window_size WINDOW_SIZE [WINDOW_SIZE ...]
-                        The window size for convolutional layers
-  --kernel_size KERNEL_SIZE [KERNEL_SIZE ...]
-                        The kernel size for convolutional layers
-  --strides STRIDES [STRIDES ...]
-                        The strides size for convolutional layers
+tCNN(#(x_train,y_train,x_test,y_test,
+  C,nCluster,num_classes,
+  batch_size,epochs,num_filters,window_size,strides_size,
+  dropout_rate,fc1_units,fc1_activate_function,
+  fc2_units,fc2_activate_function,
+  fc3_units,fc3_activate_function)
+)
 
 ```
+## Arguments
 
+- x_train     The training dataset
+- y_train     The label of training dataset
+- x_test      The testing dataset
+- y_test      The label of testing dataset     
+- num_classes     The number of classes
+- C
+- nCluster
+  batch_size,epochs,num_filters,window_size,strides_size,
+  dropout_rate,fc1_units,fc1_activate_function,
+  fc2_units,fc2_activate_function,
+  fc3_units,fc3_activate_function
 ## Example
+
+Examples
+```
+## generate 25 objects, divided into 2 clusters.
+x <- rbind(cbind(rnorm(10,0,0.5), rnorm(10,0,0.5)),
+           cbind(rnorm(15,5,0.5), rnorm(15,5,0.5)))
+pamx <- pam(x, 2)
+pamx # Medoids: '7' and '25' ...
+summary(pamx)
+plot(pamx)
+## use obs. 1 & 16 as starting medoids -- same result (typically)
+(p2m <- pam(x, 2, medoids = c(1,16)))
+## no _build_ *and* no _swap_ phase: just cluster all obs. around (1, 16):
+p2.s <- pam(x, 2, medoids = c(1,16), do.swap = FALSE)
+p2.s
+
+p3m <- pam(x, 3, trace = 2)
+## rather stupid initial medoids:
+(p3m. <- pam(x, 3, medoids = 3:1, trace = 1))
+
+
+pam(daisy(x, metric = "manhattan"), 2, diss = TRUE)
+
+data(ruspini)
+## Plot similar to Figure 4 in Stryuf et al (1996)
+## Not run: plot(pam(ruspini, 4), ask = TRUE)
+```
 
 ### USA Human Gut Microbiome data (Continous-Outcome)
 #### Train the model
