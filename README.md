@@ -4,7 +4,7 @@ We develop a deep learning prediction method "Tree-regularized convolutional Neu
 
 <center>
 
-<div align=center><img width="600" height="400" src="https://raw.githubusercontent.com/alfredyewang/tCNN/master/docs/Architecture.jpg"/></div>
+<div align=center><img width="800" height="400" src="https://raw.githubusercontent.com/alfredyewang/tCNN/master/docs/Architecture.jpg"/></div>
 </center>  
 
 ## Requirements and
