@@ -38,45 +38,80 @@ tCNN(x_train,y_train,x_test,y_test,
 
 ```
 ## Arguments
-| Arguments     | Character |\
-| x_train |The training dataset|\
+| Arguments     | Character |
+| ------------- | ------------- |
+| x_train |The training dataset|
 | y_train |The label of training dataset|
-
-
-- x_test      The testing dataset
-- y_test      The label of testing dataset     
-- num_classes     The number of classes
-- C
-- nCluster
-  batch_size,epochs,num_filters,window_size,strides_size,
-  dropout_rate,fc1_units,fc1_activate_function,
-  fc2_units,fc2_activate_function,
-  fc3_units,fc3_activate_function
+| x_test  |    The testing dataset|
+| y_test      |The label of testing dataset|     
+|num_classes     |The number of classes|
+|C      | The correlation matrix for Tree Structure |
+|nCluster | number of Cluster |
+|batch_size | The batch size for neural network |
+|epochs | The max epoch batch size for training  neural network |
+|num_filters | The number of filters in convolutional layers |
+|window_size | The window size in convolutional layers|
+|strides_size | The strides size in convolutional layers |
+|dropout_rate | The dropout rate for training  neural network
+|fc1_units | The number of node in the first fully connected layers |
+|fc1_activate_function | The activation function for the first fully connected layers (relu, tanh, softmax)|
+|fc2_units | The number of node in the second fully connected layers |
+|fc2_activate_function |The activation function for the second fully connected layers (relu, tanh, softmax)|
+|fc3_units | The number of node in the third fully connected layers |
+fc3_activate_function |The activation function for the third fully connected layers (relu, tanh, softmax)|
 ## Example
 
 Examples
 ```
-## generate 25 objects, divided into 2 clusters.
-x <- rbind(cbind(rnorm(10,0,0.5), rnorm(10,0,0.5)),
-           cbind(rnorm(15,5,0.5), rnorm(15,5,0.5)))
-pamx <- pam(x, 2)
-pamx # Medoids: '7' and '25' ...
-summary(pamx)
-plot(pamx)
-## use obs. 1 & 16 as starting medoids -- same result (typically)
-(p2m <- pam(x, 2, medoids = c(1,16)))
-## no _build_ *and* no _swap_ phase: just cluster all obs. around (1, 16):
-p2.s <- pam(x, 2, medoids = c(1,16), do.swap = FALSE)
-p2.s
+library(Rcpp)
+library(dirmult)
+library(ape)
+library(ade4)
+library(MASS)
+library(vegan)
+source('R/tCNN.R')
+load('./twinsgut.Rdata')
+age=data.obj$meta.dat$age
+tree=data.obj$tree
+dim(data.obj$meta.dat)
+dim(data.obj$otu.tab)
+sex= data.obj$meta.dat$sex
 
-p3m <- pam(x, 3, trace = 2)
-## rather stupid initial medoids:
-(p3m. <- pam(x, 3, medoids = 3:1, trace = 1))
+sex = as.integer(sex)
+sex = sex-2
+sex[sex==-1] <- NA
+id=!is.na(sex)
+samples=rownames(data.obj$meta.dat)[id]
+otu.tab=data.obj$otu.tab[,match(samples,colnames(data.obj$otu.tab))]
+otu.tab=t(otu.tab)
+sex=sex[id]
+n=length(sex)
+y=sex
+
+threshold=0.90
+zero.per = colSums(otu.tab==0)/n
+nzero.idx = which(zero.per<threshold)
+zero.idx=which(zero.per>=threshold)
+p=length(nzero.idx)
+otu.ids=colnames(otu.tab)[nzero.idx]
+tree.tips=tree$tip.label
+common.tips=intersect(tree.tips,otu.ids); length(common.tips)
+tree=drop.tip(tree, setdiff(tree.tips, common.tips))
+D=cophenetic(tree)
+otu.ids=common.tips
+otu.tab=otu.tab[,common.tips]
+dim(otu.tab)
+z=otu.tab
+z[z!=0]=sqrt(z[z!=0])
+z=as.matrix(z)
+C=exp(-2*D)
+cut = as.integer(dim(z)[1]*0.8)
+x_train = z[1:cut,]
+y_train = y[1:cut]
+x_test = z[(cut+1):dim(z)[1],]
+y_test = y[(cut+1):dim(z)[1]]
 
 
-pam(daisy(x, metric = "manhattan"), 2, diss = TRUE)
+tCNN(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,C=C,nCluster=20,num_classes=2,batch_size=16,epochs=20,num_filters=32,window_size=16,strides_size=8,dropout_rate=0.5,fc1_units=64,fc1_activate_function='relu',fc2_units=32,fc2_activate_function='relu',fc3_units=8,fc3_activate_function='relu')
 
-data(ruspini)
-## Plot similar to Figure 4 in Stryuf et al (1996)
-## Not run: plot(pam(ruspini, 4), ask = TRUE)
 ```

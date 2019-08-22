@@ -16,8 +16,8 @@ tCNN <- function(x_train,y_train,x_test,y_test,C,nCluster,num_classes,batch_size
   cat(nrow(x_train), 'train samples\n')
   cat(nrow(x_test), 'test samples\n')
 
-  y_train <- to_categorical(y, num_classes)
-  y_test <- to_categorical(y, num_classes)
+  y_train <- to_categorical(y_train, num_classes)
+  y_test <- to_categorical(y_test, num_classes)
 
   # Define Model --------------------------------------------------------------
   model <- keras_model_sequential()
