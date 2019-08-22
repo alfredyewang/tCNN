@@ -1,9 +1,3 @@
-#' Trains a simple deep NN on the MNIST dataset.
-#'
-#' Gets to 98.40% test accuracy after 20 epochs
-#' (there is *a lot* of margin for parameter tuning).
-#' 2 seconds per epoch on a K520 GPU.
-#'
 
 library(keras)
 
@@ -11,7 +5,7 @@ library(keras)
 tCNN <- function() {
 batch_size <- 128
 num_classes <- 10
-epochs <- 30
+epochs <- 1
 
 # The data, shuffled and split between train and test sets
 c(c(x_train, y_train), c(x_test, y_test)) %<-% dataset_mnist()
