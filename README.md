@@ -7,7 +7,7 @@ We develop a deep learning prediction method "Tree-regularized convolutional Neu
 <div align=center><img width="800" height="400" src="https://raw.githubusercontent.com/alfredyewang/tCNN/master/docs/Architecture.jpg"/></div>
 </center>  
 
-## Requirements and
+## Requirements
 
 tCNN is implemented by Keras for R. Please check the guide on official website for detail instruction of installing Keras for R. To use tCNN, R version >= 3.0 is required. Versions for other packages are suggested.
 
