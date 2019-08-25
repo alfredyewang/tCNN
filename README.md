@@ -11,11 +11,9 @@ We develop a deep learning prediction method "Tree-regularized convolutional Neu
 tCNN is implemented by Keras for R. Please check the guide on official website for detail instruction of installing Keras for R. To use tCNN, R version >= 3.0 is required. Versions for other packages are suggested.
 
 - R >= 3.0 (64-bit)
-
 - Python 2.7 (64-bit)
-
 - Keras 2.2.4
-
+- TensorFlow 1.14.0
 - cluster 2.1.0
 - dendextend 1.12.0
 
@@ -73,7 +71,7 @@ load('c.Rdata')
 load('y.Rdata')
 ```
 
-Splitting  data 8-2 Training set and Testing set
+Splitting  data 8-2 training set and testing set
 ```
 cut = as.integer(dim(z)[1]*0.8)
 x_train = z[1:cut,]
