@@ -42,6 +42,22 @@ tCNN <- function(x_train,y_train,x_test,y_test,C,nCluster,num_classes,batch_size
     metrics = c('accuracy')
   )
 
+
+  checkpoint_dir <- "checkpoints"
+  unlink(checkpoint_dir, recursive = TRUE)
+  dir.create(checkpoint_dir)
+  filepath <- file.path(checkpoint_dir, "weights.{epoch:02d}-{val_loss:.2f}.hdf5")
+
+  # Create checkpoint callback
+  cp_callback <- callback_model_checkpoint(
+    filepath = filepath,
+    save_weights_only = TRUE,
+    save_best_only = TRUE,
+    verbose = 1
+  )
+
+
+
   # Training & Evaluation ----------------------------------------------------
 
   # Fit model to data
@@ -50,9 +66,10 @@ tCNN <- function(x_train,y_train,x_test,y_test,C,nCluster,num_classes,batch_size
     batch_size = batch_size,
     epochs = epochs,
     verbose = 1,
-    validation_split = 0.2
+    validation_split = 0.2,
+    callbacks = list(cp_callback)
   )
-
+  model %>% save_model_hdf5("model.h5")
   plot(history)
 
   score <- model %>% evaluate(
