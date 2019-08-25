@@ -45,7 +45,6 @@ tCNN(x_train,y_train,x_test,y_test,
 | y_test      |The label of testing dataset|     
 |num_classes     |The number of classes|
 |C      | The correlation matrix for Tree Structure |
-|nCluster | number of Cluster |
 |batch_size | The batch size for neural network |
 |epochs | The max epoch batch size for training  neural network |
 |num_filters | The number of filters in convolutional layers |
@@ -89,7 +88,6 @@ Call tCNN package
 ```
 # Call tCNN package
 tCNN(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,C=C,num_classes=2,batch_size=16,epochs=100,num_filters=64,window_size=256,strides_size=32,conv1_activate_function='relu',dropout_rate=0.8,fc1_units=128,fc1_activate_function='tanh',fc2_units=32,fc2_activate_function='tanh')
-
 ```
 The checkpoint files and model are saved on root directory of tCNN project.
 <center>
