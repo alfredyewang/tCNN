@@ -14,13 +14,15 @@ tCNN is implemented by Keras for R. Please check the guide on official website f
 
 - Python 2.7 (64-bit)
 
-- Keras 2.2.4 in R and Python
+- Keras 2.2.4
 
 - cluster 2.1.0
+- dendextend 1.12.0
 
 ## Installation
 Install and load tCNN:
 ```
+devtools::install_github("rstudio/keras")
 devtools::install_github("alfredyewang/tCNN")
 library("tCNN")
 ```
@@ -62,7 +64,9 @@ We use use the gut microbiome data collected from twin pairs in Malawi affected 
 Loading library and dataset
 ```
 library(tCNN)
-
+library(cluster)
+library(dendextend)
+library(keras)
 # Get raw data from twinsgut dataset
 load('z.Rdata')
 load('c.Rdata')

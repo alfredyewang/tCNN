@@ -1,5 +1,7 @@
 library(tCNN)
-
+library(cluster)
+library(dendextend)
+library(keras)
 # Get raw data from twinsgut dataset
 load('z.Rdata')
 load('c.Rdata')
