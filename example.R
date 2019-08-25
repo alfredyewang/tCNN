@@ -1,8 +1,6 @@
 library(tCNN)
 
 # Get raw data from twinsgut dataset
-load('./twinsgut.Rdata')
-source('R/tCNN.R')
 
 C<-read.table("C.txt",header=FALSE,sep="\t")
 z<-read.table("X.txt",header=FALSE,sep="\t")
@@ -10,7 +8,6 @@ y<-read.table("Y.txt",header=FALSE,sep="\t")
 z = as.matrix(z)
 y=as.matrix(y)
 C=as.matrix(C)
-
 
 cut = as.integer(dim(z)[1]*0.8)
 x_train = z[1:cut,]
