@@ -1,5 +1,5 @@
 ## Tree-regularized Convolutional NeuralNetwork
-We develop a deep learning prediction method "Tree-regularized convolutional Neural Network,"(tCNN) for microbiome-based prediction. The advantage of tCNN is that it uses the convolutional kernel to capture the signals of microbiome species with close evolutionary relationship in a local receptive field. To incorporate the phylogenetic information via the convolutional operation, we adopt the Partitioning Around Medoids algorithm to cluster the OTUs based on their phylogenetic correlation, making phylogenetically related OTUs close to each other and irrelevant OTUs far apart from each other. For details of pCNN, users can refer to our paper "**A Phylogeny-regularized Convolutional NeuralNetwork for Microbiome-based Predictionsn**".
+We develop a deep learning prediction method "Tree-regularized convolutional Neural Network,"(tCNN) for microbiome-based prediction. The advantage of tCNN is that it uses the convolutional kernel to capture the signals of microbiome species with close evolutionary relationship in a local receptive field. To incorporate the phylogenetic information via the convolutional operation, we adopt the hierarchical agglomerative clustering algorithm to cluster the OTUs based on their phylogenetic correlation, making phylogenetically related OTUs close to each other and irrelevant OTUs far apart from each other. For details of pCNN, users can refer to our paper "**A Phylogeny-regularized Convolutional NeuralNetwork for Microbiome-based Predictionsn**".
 
 <center>
 
@@ -55,8 +55,7 @@ tCNN(x_train,y_train,x_test,y_test,
 |fc1_activate_function | The activation function for the first fully connected layers (relu, tanh, softmax)|
 |fc2_units | The number of node in the second fully connected layers |
 |fc2_activate_function |The activation function for the second fully connected layers (relu, tanh, softmax)|
-|fc3_units | The number of node in the third fully connected layers |
-fc3_activate_function |The activation function for the third fully connected layers (relu, tanh, softmax)|
+
 ## Example
 We use use the gut microbiome data collected from twin pairs in Malawi affected by kwashiorkor as an example. These gut microbiome is also profiled using 16S rRNA gene-targeted sequencing and deposited in Qiita with study ID 737. The dataset is downloaded and processed, resulting in a a total of 1041 twins (including MZ and DZ) consisting of 483 females, 512 males and 46 samples with missing gender information profiled with 4321 OTUs. After the same data pre-processing steps aforementioned, we have 995 individuals profiled with 2291 OTUs for the classification task. The detailed pre-processing steps can be found in our paper.
 
