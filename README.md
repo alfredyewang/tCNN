@@ -93,6 +93,6 @@ tCNN(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,C=C,num_classes
 ```
 The checkpoint files and model are saved on root directory of tCNN project.
 <center>
-<div align=center><img width="800" height="400" src="https://raw.githubusercontent.com/alfredyewang/tCNN/master/docs/Architecture.jpg"/></div>
+<div align=center><img width="800" height="400" src="https://raw.githubusercontent.com/alfredyewang/tCNN/master/docs/res.jpg"/></div>
 </center>  
 #### The tCNN is supported by Google Summer of Code 2019 (R project for statistical computing). Thanks for Google!
