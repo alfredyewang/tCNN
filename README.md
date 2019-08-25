@@ -1,5 +1,5 @@
 ## Tree-regularized Convolutional NeuralNetwork
-We develop a deep learning prediction method "Tree-regularized convolutional Neural Network,"(tCNN) for microbiome-based prediction. The advantage of tCNN is that it uses the convolutional kernel to capture the signals of microbiome species with close evolutionary relationship in a local receptive field. To incorporate the phylogenetic information via the convolutional operation, we adopt the hierarchical agglomerative clustering algorithm to cluster the OTUs based on their phylogenetic correlation, making phylogenetically related OTUs close to each other and irrelevant OTUs far apart from each other. For details of pCNN, users can refer to our paper "**A Phylogeny-regularized Convolutional NeuralNetwork for Microbiome-based Predictionsn**".
+We develop a deep learning prediction method "Tree-regularized convolutional Neural Network,"(tCNN) for microbiome-based prediction. The advantage of tCNN is that it uses the convolutional kernel to capture the signals of microbiome species with close evolutionary relationship in a local receptive field. To incorporate the phylogenetic information via the convolutional operation, we adopt the **hierarchical agglomerative clustering (HAC)** algorithm to cluster the OTUs based on their phylogenetic correlation, making phylogenetically related OTUs close to each other and irrelevant OTUs far apart from each other. For details of pCNN, users can refer to our paper "**A Phylogeny-regularized Convolutional NeuralNetwork for Microbiome-based Predictionsn**".
 
 <center>
 
@@ -64,12 +64,9 @@ Loading library and dataset
 library(tCNN)
 
 # Get raw data from twinsgut dataset
-C<-read.table("C.txt",header=FALSE,sep="\t")
-z<-read.table("X.txt",header=FALSE,sep="\t")
-y<-read.table("Y.txt",header=FALSE,sep="\t")
-z = as.matrix(z)
-y=as.matrix(y)
-C=as.matrix(C)
+load('z.Rdata')
+load('c.Rdata')
+load('y.Rdata')
 ```
 
 Splitting  data 8-2 Training set and Testing set
